@@ -2,328 +2,259 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Hunter Pro | Strict Mode</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patil Capitals - PTC Official</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .neon-text { color: #a3ff12; text-shadow: 0 0 10px #a3ff12; }
-        .active-nav { color: #a3ff12; border-top: 2px solid #a3ff12; }
-        .game-card { background: #111; border: 1px solid rgba(255,255,255,0.05); }
-    </style>
-</head>
-<body class="flex justify-center">
-
-    <div class="w-full max-w-md h-screen flex flex-col bg-[#050505] relative shadow-2xl">
+        :root { --bg: #0f051d; --card: #1e0d36; --accent: #9b59b6; --gold: #f1c40f; --white: #ffffff; }
         
-        <div class="p-5 flex justify-between items-center bg-black/50 backdrop-blur-md">
-            <h1 class="text-xl font-black italic tracking-tighter">DARK <span class="neon-text">HUNTER</span></h1>
-            <div class="bg-[#111] px-4 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
-                <i class="fa-solid fa-wallet text-[#a3ff12] text-xs"></i>
-                <span id="top-balance" class="text-xs font-bold text-[#a3ff12]">₹0.00</span>
-            </div>
-        </div>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--white); margin: 0; overflow: hidden; touch-action: manipulation; }
 
-        <div id="main-view" class="flex-1 overflow-y-auto p-5 pb-24">
-            
-            <div id="home-sec">
-                <h3 class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-4">Games Lobby</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div onclick="showSection('earn')" class="game-card p-6 rounded-3xl text-center space-y-3 border-[#a3ff12]/20 cursor-pointer">
-                        <i class="fa-solid fa-bolt text-3xl text-[#a3ff12]"></i>
-                        <p class="text-[10px] font-black uppercase">Tap Master</p>
-                    </div>
-                    <div class="game-card p-6 rounded-3xl text-center space-y-3 opacity-30">
-                        <i class="fa-solid fa-dice text-3xl text-blue-500"></i>
-                        <p class="text-[10px] font-black uppercase">Color Win</p>
-                    </div>
-                </div>
-            </div>
+        /* --- Header Stats --- */
+        .header { display: flex; justify-content: space-around; padding: 15px 10px; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--accent); }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-label { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; }
+        .stat-value { font-size: 14px; font-weight: bold; color: var(--gold); }
 
-            <div id="earn-sec" class="hidden h-full flex flex-col items-center justify-center space-y-10">
-                <div class="text-center">
-                    <p id="coin-display" class="text-5xl font-mono font-black tracking-tighter">0.000000</p>
-                    <p class="text-[10px] opacity-40 font-bold uppercase mt-2 tracking-widest text-[#a3ff12]">Hunter Coins</p>
-                </div>
-                <button onclick="handleTap()" class="relative w-64 h-64 rounded-full bg-black border-[12px] border-white/5 flex items-center justify-center active:scale-95 transition-all shadow-2xl">
-                    <i id="lock-icon" class="fa-solid fa-lock text-6xl text-white/10"></i>
-                </button>
-                <p id="tap-msg" class="text-[10px] font-bold text-red-500 uppercase">Wallet Balance: ₹0.00 (Locked)</p>
-            </div>
+        /* --- Main Container --- */
+        .container { height: 80vh; overflow-y: auto; padding: 20px; padding-bottom: 100px; text-align: center; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-            <div id="wallet-sec" class="hidden space-y-5">
-                <div class="bg-[#111] p-10 rounded-[40px] border border-white/5 text-center">
-                    <p class="text-xs opacity-40 font-bold mb-1 uppercase tracking-widest text-white/60">Current Balance</p>
-                    <h2 id="wallet-balance" class="text-5xl font-black text-red-500 italic">₹0.00</h2>
-                    <p id="pending-status" class="hidden text-[10px] text-yellow-500 mt-2 font-bold italic animate-pulse">Verification Pending...</p>
-                </div>
-                <button onclick="openPay()" class="w-full bg-[#a3ff12] text-black py-5 rounded-3xl font-black text-xs uppercase shadow-lg shadow-[#a3ff12]/20">Deposit ₹20</button>
-            </div>
+        /* --- Game (Home) UI --- */
+        .balance-container { margin: 20px 0; }
+        .coin-balance { font-size: 40px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .coin-balance img { width: 40px; height: 40px; }
+        
+        .coin-btn { width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, #cd7f32 0%, #8b4513 100%); margin: 30px auto; border: 8px solid #5d2e0a; position: relative; cursor: pointer; transition: transform 0.05s; box-shadow: 0 0 40px rgba(155, 89, 182, 0.3); overflow: hidden; }
+        .coin-btn:active { transform: scale(0.95); }
+        .coin-btn img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .disabled { filter: grayscale(1); pointer-events: none; opacity: 0.6; }
 
-        </div>
+        .energy-box { width: 80%; margin: 20px auto; }
+        .energy-text { font-size: 14px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .energy-bar-bg { width: 100%; height: 12px; background: #222; border-radius: 10px; overflow: hidden; border: 1px solid var(--accent); }
+        .energy-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); transition: width 0.3s; }
 
-        <div class="fixed bottom-0 w-full max-w-md bg-black/95 border-t border-white/5 flex justify-around py-5">
-            <button onclick="showSection('home')" id="nav-home" class="flex flex-col items-center gap-1 active-nav">
-                <i class="fa-solid fa-grid-2 text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Home</span>
-            </button>
-            <button onclick="showSection('earn')" id="nav-earn" class="flex flex-col items-center gap-1 text-white/30">
-                <i class="fa-solid fa-bolt text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Earn</span>
-            </button>
-            <button onclick="showSection('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 text-white/30">
-                <i class="fa-solid fa-wallet text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Wallet</span>
-            </button>
-        </div>
+        /* --- Wallet & Cards --- */
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .input-group { margin: 15px 0; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 16px; text-align: center; }
+        .main-btn { background: var(--gold); color: #000; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        
+        .qr-result { background: #fff; padding: 15px; border-radius: 15px; margin-top: 20px; display: none; }
+        .qr-result img { width: 100%; max-width: 200px; }
+        .qr-result p { color: #000; font-weight: bold; margin: 10px 0 0; }
 
-        <div id="pay-modal" class="hidden fixed inset-0 bg-black/98 z-[100] flex items-center justify-center p-10">
-            <div class="bg-[#0a0a0a] p-8 rounded-[40px] w-full text-center border border-white/10 space-y-6">
-                <p class="text-[10px] font-black opacity-60 tracking-[3px] uppercase">Scan & Pay ₹20</p>
-                <div class="bg-white p-4 rounded-3xl inline-block">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=20">
-                </div>
-                <p class="text-xs font-black neon-text font-mono">yogeshbpatil72@okhdfcbank</p>
-                <button onclick="requestVerify()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">I Have Paid ₹20</button>
-                <button onclick="closePay()" class="text-white/20 text-[10px] font-bold uppercase">Cancel</button>
-            </div>
-        </div>
+        /* --- Navigation --- */
+        .nav { position: fixed; bottom: 15px; left: 5%; width: 90%; background: var(--card); border-radius: 25px; display: flex; justify-content: space-around; padding: 10px; border: 1px solid var(--accent); box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .nav-link { color: #888; text-decoration: none; font-size: 11px; text-align: center; flex: 1; }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-link.active-nav { color: var(--white); }
 
-    </div>
-
-    <script>
-        let walletAmount = 0;
-        let coins = 0.000000;
-
-        function showSection(id) {
-            ['home-sec', 'earn-sec', 'wallet-sec'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            ['nav-home', 'nav-earn', 'nav-wallet'].forEach(n => {
-                document.getElementById(n).classList.remove('active-nav');
-                document.getElementById(n).classList.add('text-white/30');
-            });
-            document.getElementById(id + '-sec').classList.remove('hidden');
-            document.getElementById('nav-' + id).classList.add('active-nav');
-        }
-
-        function handleTap() {
-            if(walletAmount < 20) {
-                alert("❌ Amount not found in Wallet! Please wait for Admin Verification.");
-                showSection('wallet');
-                return;
-            }
-            coins += 0.000001;
-            document.getElementById('coin-display').innerText = coins.toFixed(6);
-        }
-
-        function openPay() { document.getElementById('pay-modal').classList.remove('hidden'); }
-        function closePay() { document.getElementById('pay-modal').classList.add('hidden'); }
-
-        function requestVerify() {
-            document.getElementById('pending-status').classList.remove('hidden');
-            closePay();
-            alert("✅ Payment details sent to Admin. Wallet will be updated after verification!");
-        }
-
-        /* --- ADMIN ONLY: How to Approve ---
-           Browser च्या Console मध्ये 'approvePayment()' टाईप केल्यावरच पैसे वाढतील.
-        */
-        window.approvePayment = function() {
-            walletAmount = 20;
-            document.getElementById('top-balance').innerText = "₹20.00";
-            document.getElementById('wallet-balance').innerText = "₹20.00";
-            document.getElementById('wallet-balance').className = "text-5xl font-black text-[#a3ff12] italic";
-            document.getElementById('pending-status').innerText = "Verified ✅";
-            document.getElementById('lock-icon').className = "fa-solid fa-bolt-lightning text-6xl neon-text";
-            document.getElementById('tap-msg').innerText = "Limit: 1000/1000 Taps Remaining";
-            document.getElementById('tap-msg').className = "text-[10px] font-bold text-[#a3ff12] opacity-60 uppercase";
-            alert("Admin Action: Payment Approved! Wallet Updated.");
-        }
-    </script>
-</body>
-    </html>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Hunter | Mega Game Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .game-card { background: #111; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
-        .game-card:active { transform: scale(0.95); }
-        .tab-content { display: none; height: 82vh; overflow-y: auto; padding-bottom: 100px; }
-        .active-tab { display: block; }
-        .neon-text { color: #a3ff12; text-shadow: 0 0 10px #a3ff12; }
+        /* --- Floating Effect --- */
+        .plus-one { position: fixed; color: #fff; font-size: 28px; font-weight: bold; pointer-events: none; animation: flyUp 0.8s forwards; z-index: 999; }
+        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-150px); } }
     </style>
 </head>
 <body>
 
-    <div class="max-w-md mx-auto h-screen flex flex-col bg-[#050505] border-x border-white/5">
-        <div class="p-5 flex justify-between items-center bg-black border-b border-white/5">
-            <h1 class="font-black text-[#a3ff12] italic tracking-tighter text-xl">DARK HUNTER</h1>
-            <div class="bg-[#111] px-4 py-1 rounded-full border border-[#a3ff12]/30 text-[#a3ff12] text-xs font-bold">
-                Wallet: ₹<span id="bal">0</span>
+    <div class="header">
+        <div class="stat-item"><span class="stat-label">Profit/hr</span><span class="stat-value">+0</span></div>
+        <div class="stat-item"><span class="stat-label">Level</span><span class="stat-value">Bronze</span></div>
+        <div class="stat-item"><span class="stat-label">Limit</span><span class="stat-value">5k</span></div>
+    </div>
+
+    <div class="container">
+        <div id="home" class="page active">
+            <div class="balance-container">
+                <div class="coin-balance">
+                    <i class="fas fa-coins" style="color:var(--gold)"></i>
+                    <span id="coins-display">0</span>
+                </div>
+            </div>
+            
+            <div class="coin-btn" id="coin-trigger">
+                <img src="https://i.ibb.co/sJHgGndr/logo.png" alt="Coin Logo">
+            </div>
+
+            <div class="energy-box">
+                <div class="energy-text">
+                    <span>⚡ <span id="energy-val">500</span>/500</span>
+                    <span style="color:var(--gold)">Boost 🚀</span>
+                </div>
+                <div class="energy-bar-bg"><div id="energy-bar" class="energy-bar-fill"></div></div>
             </div>
         </div>
 
-        <div class="flex-1">
-            <div id="home" class="tab-content active-tab p-5 space-y-8">
+        <div id="wallet" class="page">
+            <h2>👛 My Wallet</h2>
+            <div class="card">
+                <p>Deposit Amount (₹)</p>
+                <div class="input-group">
+                    <input type="number" id="amt" placeholder="Enter amount (min ₹20)">
+                </div>
+                <button class="main-btn" onclick="getQR()">Generate QR Code</button>
                 
-                <section>
-                    <div class="flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-fire text-orange-500"></i>
-                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Action & Runner</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div onclick="playGame('Subway Surfers')" class="game-card p-5 rounded-[2rem] text-center">
-                            <i class="fa-solid fa-person-running text-3xl text-yellow-500"></i>
-                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Subway Surfers</p>
-                        </div>
-                        <div onclick="playGame('Space Combat')" class="game-card p-5 rounded-[2rem] text-center">
-                            <i class="fa-solid fa-jet-fighter text-3xl text-red-500"></i>
-                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Space Action</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-puzzle-piece text-blue-500"></i>
-                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Board & Puzzles</p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div onclick="playGame('Ludo Master')" class="game-card p-5 rounded-[2rem] text-center">
-                            <i class="fa-solid fa-dice text-3xl text-green-500"></i>
-                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Ludo Pro</p>
-                        </div>
-                        <div onclick="playGame('Block Puzzle')" class="game-card p-5 rounded-[2rem] text-center">
-                            <i class="fa-solid fa-shapes text-3xl text-purple-500"></i>
-                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Block Puzzle</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-coins text-[#a3ff12]"></i>
-                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Earning Games</p>
-                    </div>
-                    <div onclick="showTab('color')" class="game-card p-6 rounded-[2rem] flex justify-between items-center border-[#a3ff12]/30">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-[#a3ff12]/10 rounded-2xl flex items-center justify-center">
-                                <i class="fa-solid fa-chart-line text-[#a3ff12] text-xl"></i>
-                            </div>
-                            <div>
-                                <b class="text-xs uppercase">Color Prediction</b>
-                                <p class="text-[9px] text-[#a3ff12] font-bold">Win 2x Profit</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-white/20"></i>
-                    </div>
-                </section>
-            </div>
-
-            <div id="color" class="tab-content p-6">
-                <div class="bg-[#111] p-8 rounded-[3rem] text-center border border-white/5 space-y-6">
-                    <p class="text-[10px] opacity-40 uppercase tracking-[4px]">Next Result in 15s</p>
-                    <div id="result-box" class="text-xl font-black italic">RESULT: ?</div>
-                    <div class="flex justify-center gap-4">
-                        <button onclick="bet('green')" class="bg-green-600 px-10 py-4 rounded-2xl font-black text-xs uppercase shadow-lg shadow-green-900/20">Green</button>
-                        <button onclick="bet('red')" class="bg-red-600 px-10 py-4 rounded-2xl font-black text-xs uppercase shadow-lg shadow-red-900/20">Red</button>
-                    </div>
+                <div id="qr-area" class="qr-result">
+                    <img id="qr-img" src="" alt="UPI QR">
+                    <p>Scan & Pay: ₹<span id="show-amt">0</span></p>
+                    <small style="color:red; display:block; margin-top:5px;">Scan kelya nantar Banking Name check kara.</small>
                 </div>
             </div>
-
-            <div id="wallet" class="tab-content p-6 space-y-6">
-                <div class="bg-gradient-to-br from-[#111] to-black p-10 rounded-[3rem] text-center border border-white/5 shadow-2xl">
-                    <p class="text-[10px] opacity-40 uppercase font-black tracking-widest mb-2">My Balance</p>
-                    <h2 class="text-6xl font-black text-[#a3ff12] italic" id="wal-bal">₹0</h2>
-                    <p id="p-status" class="hidden text-[10px] text-yellow-500 mt-4 font-bold italic animate-pulse">Verification Pending...</p>
+            <div class="card" id="upload-box" style="display:none;">
+                <p>Payment kelya nantar screenshot upload kara:</p>
+                <input type="file" id="ss" accept="image/*" onchange="preview(event)">
+                <div id="pre" style="display:none; margin-top:10px;">
+                    <img id="pre-img" style="width:100%; border-radius:10px;">
+                    <button class="main-btn" style="background:#27ae60; color:#fff;" onclick="sendToAdmin()">Confirm Payment</button>
                 </div>
-                <button onclick="payNow()" class="w-full bg-[#a3ff12] text-black py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-[#a3ff12]/10">Deposit ₹20 to Play</button>
             </div>
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-black/90 backdrop-blur-xl border-t border-white/5 flex justify-around py-6 z-50">
-            <button onclick="showTab('home')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
-                <i class="fa-solid fa-grid-2 text-xl"></i>
-                <span class="text-[8px] font-black uppercase">Home</span>
-            </button>
-            <button onclick="showTab('color')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
-                <i class="fa-solid fa-coins text-xl"></i>
-                <span class="text-[8px] font-black uppercase">Earn</span>
-            </button>
-            <button onclick="showTab('wallet')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
-                <i class="fa-solid fa-wallet text-xl"></i>
-                <span class="text-[8px] font-black uppercase">Wallet</span>
-            </button>
-        </div>
-
-        <div id="modal" class="hidden fixed inset-0 bg-black/98 z-[100] flex flex-col items-center justify-center p-10 text-center space-y-8">
-            <div class="space-y-2">
-                <p class="text-[10px] font-black opacity-40 tracking-[5px] uppercase">Payment Portal</p>
-                <h3 class="text-xl font-bold italic">Deposit ₹20</h3>
+        <div id="friends" class="page">
+            <h2>👥 Invite Friends</h2>
+            <div class="card">
+                <p>Invite kara ani 1,000 PTC kama!</p>
+                <div style="background:#000; padding:10px; border-radius:10px; font-size:12px; word-break:break-all;" id="ref-url">Loading...</div>
+                <button class="main-btn" onclick="copyLink()">Copy Link</button>
             </div>
-            <div class="bg-white p-4 rounded-[2.5rem] shadow-2xl">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=20">
-            </div>
-            <p class="text-xs font-mono font-bold text-[#a3ff12] tracking-widest">yogeshbpatil72@okhdfcbank</p>
-            <button onclick="requestVerify()" class="w-full bg-white text-black py-5 rounded-2xl font-black text-xs uppercase tracking-widest">I Have Paid ₹20</button>
-            <button onclick="closePay()" class="text-xs opacity-20 uppercase font-bold tracking-widest">Cancel</button>
         </div>
     </div>
 
+    <nav class="nav">
+        <a href="#" class="nav-link active-nav" onclick="showPage('home', this)"><i class="fas fa-home"></i>Home</a>
+        <a href="#" class="nav-link" onclick="showPage('friends', this)"><i class="fas fa-users"></i>Friends</a>
+        <a href="#" class="nav-link" onclick="showPage('wallet', this)"><i class="fas fa-wallet"></i>Wallet</a>
+    </nav>
+
     <script>
-        let wallet = 0;
+        const tg = window.Telegram.WebApp;
+        const upi = "yogeshbpatil72@okhdfcbank";
+        const botName = "PatilCapitalsBot"; // Tumcha khara bot name ithe taka
 
-        function showTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
-            document.getElementById(id).classList.add('active-tab');
-        }
+        let data = {
+            coins: 0,
+            energy: 500,
+            active: false,
+            id: "guest"
+        };
 
-        function payNow() { document.getElementById('modal').classList.remove('hidden'); }
-        function closePay() { document.getElementById('modal').classList.add('hidden'); }
-
-        function requestVerify() {
-            document.getElementById('p-status').classList.remove('hidden');
-            closePay();
-            alert("Verification Sent! Wallet will update after Admin checks payment.");
-        }
-
-        // --- ADMIN COMMAND: Copy paste in Browser Console ---
-        window.approve = function() {
-            wallet = 20;
-            document.getElementById('bal').innerText = "20";
-            document.getElementById('wal-bal').innerText = "₹20";
-            document.getElementById('wal-bal').className = "text-6xl font-black text-[#a3ff12] italic";
-            document.getElementById('p-status').innerText = "Verified ✅";
-            alert("ADMIN: ₹20 Added. All Games Unlocked!");
-        }
-
-        function playGame(name) {
-            if(wallet < 20) {
-                alert("🔒 " + name + " is Locked! Please deposit ₹20 first.");
-                showTab('wallet');
-            } else {
-                alert("🚀 Launching " + name + "... Enjoy your game!");
+        // --- Backend Logic & Data Persistence ---
+        function loadData() {
+            const saved = localStorage.getItem('ptc_data_' + data.id);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                data.coins = parsed.coins;
+                data.energy = parsed.energy;
+                data.active = parsed.active;
             }
+            updateUI();
         }
 
-        function bet(color) {
-            if(wallet < 20) {
-                alert("🔒 Deposit ₹20 to play Color Prediction!");
-                showTab('wallet');
+        function saveData() {
+            localStorage.setItem('ptc_data_' + data.id, JSON.stringify(data));
+        }
+
+        function updateUI() {
+            document.getElementById('coins-display').innerText = data.coins.toLocaleString();
+            document.getElementById('energy-val').innerText = data.energy;
+            document.getElementById('energy-bar').style.width = (data.energy / 5) + "%";
+            
+            const btn = document.getElementById('coin-trigger');
+            if(data.energy <= 0) btn.classList.add('disabled');
+            else btn.classList.remove('disabled');
+        }
+
+        // --- Interaction Logic ---
+        document.getElementById('coin-trigger').addEventListener('click', (e) => {
+            if (!data.active) {
+                tg.showAlert("Account Active Nahi! Wallet madhe jaun ₹20 deposit kara.");
                 return;
             }
-            document.getElementById('result-box').innerText = "DRAWING...";
-            setTimeout(() => {
-                let res = Math.random() > 0.5 ? 'RED' : 'GREEN';
-                document.getElementById('result-box').innerText = "RESULT: " + res;
-                if(res === color.toUpperCase()) alert("🎉 WIN! Double profit added.");
-                else alert("❌ LOSS! Try again.");
-            }, 2000);
+            if (data.energy > 0) {
+                data.coins += 1;
+                data.energy -= 1;
+                showFloat(e);
+                updateUI();
+                saveData();
+            }
+        });
+
+        function showFloat(e) {
+            const span = document.createElement('span');
+            span.innerText = "+1";
+            span.className = "plus-one";
+            span.style.left = e.clientX + "px";
+            span.style.top = e.clientY + "px";
+            document.body.appendChild(span);
+            setTimeout(() => span.remove(), 800);
         }
+
+        // --- Wallet Logic ---
+        function getQR() {
+            const a = document.getElementById('amt').value;
+            if(a < 20) { tg.showAlert("Krupaya ₹20 chya pudhe amount taka."); return; }
+            
+            const url = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${upi}%26am=${a}%26cu=INR`;
+            document.getElementById('qr-img').src = url;
+            document.getElementById('show-amt').innerText = a;
+            document.getElementById('qr-area').style.display = "block";
+            document.getElementById('upload-box').style.display = "block";
+        }
+
+        function preview(e) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById('pre-img').src = reader.result;
+                document.getElementById('pre').style.display = "block";
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function sendToAdmin() {
+            tg.showAlert("Request Sent! Admin la message pathva.");
+            data.active = true; // Auto activate for demo
+            saveData();
+            setTimeout(() => { tg.openTelegramLink("https://t.me/Yogesh_Patil_72"); }, 1000);
+        }
+
+        // --- Navigation ---
+        function showPage(p, el) {
+            document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active-nav'));
+            document.getElementById(p).classList.add('active');
+            el.classList.add('active-nav');
+        }
+
+        function copyLink() {
+            const l = document.getElementById('ref-url').innerText;
+            navigator.clipboard.writeText(l).then(() => tg.showAlert("Link Copy Zali!"));
+        }
+
+        // --- Initialization ---
+        window.onload = () => {
+            tg.expand();
+            const user = tg.initDataUnsafe?.user;
+            if (user) {
+                data.id = user.id;
+                document.getElementById('ref-url').innerText = `https://t.me/${botName}?start=${user.id}`;
+            }
+            loadData();
+        };
+
+        // Passive Energy Recovery
+        setInterval(() => {
+            if (data.energy < 500) {
+                data.energy += 1;
+                updateUI();
+                saveData();
+            }
+        }, 3000);
     </script>
 </body>
-                            </html>
-            
+                </html>
+    
