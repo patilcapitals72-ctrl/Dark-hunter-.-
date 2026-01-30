@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Hunter | Premium Earn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; }
+        .neon-border { border: 1px solid #a3ff12; box-shadow: 0 0 15px rgba(163, 255, 18, 0.2); }
+        .neon-text { color: #a3ff12; text-shadow: 0 0 10px rgba(163, 255, 18, 0.5); }
+        .tap-circle { background: radial-gradient(circle, #111 0%, #000 100%); transition: transform 0.1s; }
+        .tap-circle:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="flex justify-center bg-black">
+
+    <div class="w-full max-w-md h-screen flex flex-col bg-[#0a0a0a] shadow-2xl relative border-x border-white/5">
+        
+        <div class="p-6 flex justify-between items-end border-b border-white/5">
+            <div>
+                <p class="text-[10px] text-white/40 uppercase tracking-widest font-bold">Total Balance</p>
+                <p id="balance-display" class="text-2xl font-black neon-text italic">₹100.00</p>
+            </div>
+            <div id="status-tag" class="px-3 py-1 rounded-md bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] font-bold uppercase">
+                Status: Locked
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col items-center justify-center space-y-10 px-6">
+            <div class="text-center">
+                <h1 class="text-4xl font-black italic tracking-tighter">DARK <span class="neon-text">HUNTER</span></h1>
+                <p class="text-[10px] text-white/20 mt-1 uppercase font-bold tracking-widest">Premium Tapping Engine</p>
+            </div>
+
+            <div onclick="handleTap()" class="tap-circle w-64 h-64 rounded-full flex items-center justify-center border-[12px] border-white/5 cursor-pointer shadow-inner">
+                <div id="main-icon" class="text-white/10 text-7xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+
+            <div class="text-center space-y-1">
+                <p id="coin-display" class="text-5xl font-mono font-bold tracking-tighter">0.000000</p>
+                <p id="taps-left" class="text-[10px] text-white/40 font-medium">Daily Limit: 1000/1000 Taps</p>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <button onclick="openPayment()" class="w-full bg-[#a3ff12] text-black py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all">
+                Unlock Premium (₹100)
+            </button>
+        </div>
+
+        <div id="payment-modal" class="hidden absolute inset-0 bg-black/95 z-50 flex items-center justify-center p-8 backdrop-blur-sm">
+            <div class="bg-[#111] p-8 rounded-3xl w-full border border-white/10 text-center space-y-6">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-white/60">Scan to Pay</h3>
+                <div class="bg-white p-4 rounded-2xl inline-block shadow-2xl">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=100" alt="Payment QR">
+                </div>
+                <div>
+                    <p class="text-xs font-bold neon-text">yogeshbpatil72@okhdfcbank</p>
+                    <p class="text-[10px] text-white/30 mt-1 italic">Pay ₹100 to start earning</p>
+                </div>
+                <button onclick="verifyAndUnlock()" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs uppercase">I have paid</button>
+                <button onclick="closePayment()" class="text-white/20 text-[10px] uppercase font-bold tracking-widest hover:text-white transition-colors">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPremium = false;
+        let coins = 0.000000;
+        let taps = 1000;
+
+        function handleTap() {
+            if (!isPremium) {
+                alert("Access Denied: Please unlock Premium first!");
+                return;
+            }
+            if (taps > 0) {
+                coins += 0.000001;
+                taps--;
+                document.getElementById('coin-display').innerText = coins.toFixed(6);
+                document.getElementById('taps-left').innerText = `Daily Limit: ${taps}/1000 Taps`;
+            } else {
+                alert("Daily Limit Reached!");
+            }
+        }
+
+        function openPayment() {
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+
+        function closePayment() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        function verifyAndUnlock() {
+            // Note: This is client-side logic. Real verification happens after you check your GPay.
+            isPremium = true;
+            document.getElementById('status-tag').innerText = "Status: Active";
+            document.getElementById('status-tag').className = "px-3 py-1 rounded-md bg-[#a3ff12]/10 border border-[#a3ff12]/50 text-[#a3ff12] text-[9px] font-bold uppercase";
+            document.getElementById('main-icon').innerHTML = '<i class="fa-solid fa-bolt-lightning text-[#a3ff12]"></i>';
+            document.getElementById('main-icon').classList.remove('text-white/10');
+            closePayment();
+            alert("Payment Sent for Verification! Features Unlocked.");
+        }
+    </script>
+</body>
+            </html>
+            
