@@ -3,135 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Hunter Pro | Gaming Hub</title>
+    <title>Dark Hunter Pro | Strict Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
         .neon-text { color: #a3ff12; text-shadow: 0 0 10px #a3ff12; }
-        .game-card { background: linear-gradient(145deg, #111, #050505); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         .active-nav { color: #a3ff12; border-top: 2px solid #a3ff12; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
-        .tap-animation { animation: pulse 0.5s ease-out; }
+        .game-card { background: #111; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="flex justify-center">
 
-    <div class="w-full max-w-md h-screen flex flex-col bg-[#050505] relative shadow-2xl border-x border-white/5">
+    <div class="w-full max-w-md h-screen flex flex-col bg-[#050505] relative shadow-2xl">
         
-        <div class="p-5 flex justify-between items-center bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="p-5 flex justify-between items-center bg-black/50 backdrop-blur-md">
             <h1 class="text-xl font-black italic tracking-tighter">DARK <span class="neon-text">HUNTER</span></h1>
             <div class="bg-[#111] px-4 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
                 <i class="fa-solid fa-wallet text-[#a3ff12] text-xs"></i>
-                <span id="top-balance" class="text-xs font-bold font-mono text-[#a3ff12]">₹100.00</span>
+                <span id="top-balance" class="text-xs font-bold text-[#a3ff12]">₹0.00</span>
             </div>
         </div>
 
-        <div id="main-display" class="flex-1 overflow-y-auto p-5 pb-24">
+        <div id="main-view" class="flex-1 overflow-y-auto p-5 pb-24">
             
             <div id="home-sec">
-                <div class="mb-8 rounded-3xl h-40 bg-gradient-to-br from-[#a3ff12]/20 to-black border border-[#a3ff12]/30 p-6 flex flex-col justify-center">
-                    <p class="text-[10px] font-black tracking-widest opacity-50 uppercase">Daily Bonus Available</p>
-                    <h2 class="text-2xl font-black italic leading-tight mt-1">EARN UP TO<br>₹500 PER DAY</h2>
-                </div>
-
-                <h3 class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-4">Games Library</h3>
+                <h3 class="text-[10px] font-bold opacity-30 uppercase tracking-widest mb-4">Games Lobby</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <div onclick="showView('earn')" class="game-card p-6 rounded-3xl text-center space-y-3 border-[#a3ff12]/20 cursor-pointer">
-                        <div class="w-12 h-12 bg-[#a3ff12]/10 rounded-2xl flex items-center justify-center mx-auto">
-                            <i class="fa-solid fa-bolt-lightning text-xl text-[#a3ff12]"></i>
-                        </div>
-                        <p class="text-[10px] font-black">TAP MASTER</p>
-                        <span class="text-[8px] bg-[#a3ff12] text-black px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
+                    <div onclick="showSection('earn')" class="game-card p-6 rounded-3xl text-center space-y-3 border-[#a3ff12]/20 cursor-pointer">
+                        <i class="fa-solid fa-bolt text-3xl text-[#a3ff12]"></i>
+                        <p class="text-[10px] font-black uppercase">Tap Master</p>
                     </div>
-                    <div class="game-card p-6 rounded-3xl text-center space-y-3 opacity-40">
-                        <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mx-auto">
-                            <i class="fa-solid fa-dice text-xl text-blue-500"></i>
-                        </div>
+                    <div class="game-card p-6 rounded-3xl text-center space-y-3 opacity-30">
+                        <i class="fa-solid fa-dice text-3xl text-blue-500"></i>
                         <p class="text-[10px] font-black uppercase">Color Win</p>
-                        <span class="text-[8px] bg-white/10 text-white/50 px-2 py-0.5 rounded-full font-bold">SOON</span>
                     </div>
                 </div>
             </div>
 
-            <div id="earn-sec" class="hidden flex flex-col items-center justify-center h-full space-y-10">
+            <div id="earn-sec" class="hidden h-full flex flex-col items-center justify-center space-y-10">
                 <div class="text-center">
-                    <p id="coin-val" class="text-5xl font-mono font-black tracking-tighter">0.000000</p>
-                    <p class="text-[10px] opacity-40 font-bold uppercase tracking-widest mt-2 italic">Hunter Coins</p>
+                    <p id="coin-display" class="text-5xl font-mono font-black tracking-tighter">0.000000</p>
+                    <p class="text-[10px] opacity-40 font-bold uppercase mt-2 tracking-widest text-[#a3ff12]">Hunter Coins</p>
                 </div>
-                <button onclick="handleTap()" id="tap-trigger" class="relative w-64 h-64 rounded-full bg-black border-[12px] border-white/5 flex items-center justify-center active:scale-95 transition-all shadow-2xl">
+                <button onclick="handleTap()" class="relative w-64 h-64 rounded-full bg-black border-[12px] border-white/5 flex items-center justify-center active:scale-95 transition-all shadow-2xl">
                     <i id="lock-icon" class="fa-solid fa-lock text-6xl text-white/10"></i>
                 </button>
-                <p class="text-[10px] font-bold opacity-40 uppercase">Limit: 1000/1000 Taps</p>
+                <p id="tap-msg" class="text-[10px] font-bold text-red-500 uppercase">Wallet Balance: ₹0.00 (Locked)</p>
             </div>
 
             <div id="wallet-sec" class="hidden space-y-5">
-                <div class="bg-[#111] p-10 rounded-[40px] border border-white/5 text-center shadow-inner">
-                    <p class="text-xs opacity-40 font-bold mb-1 uppercase tracking-widest">Available Balance</p>
-                    <h2 class="text-5xl font-black text-[#a3ff12] italic">₹100.00</h2>
+                <div class="bg-[#111] p-10 rounded-[40px] border border-white/5 text-center">
+                    <p class="text-xs opacity-40 font-bold mb-1 uppercase tracking-widest text-white/60">Current Balance</p>
+                    <h2 id="wallet-balance" class="text-5xl font-black text-red-500 italic">₹0.00</h2>
+                    <p id="pending-status" class="hidden text-[10px] text-yellow-500 mt-2 font-bold italic animate-pulse">Verification Pending...</p>
                 </div>
-                <button onclick="openModal()" class="w-full bg-[#a3ff12] text-black py-5 rounded-3xl font-black text-xs uppercase tracking-[2px] shadow-lg shadow-[#a3ff12]/20">Deposit Now</button>
-                <button onclick="alert('Withdrawals open at ₹500')" class="w-full bg-white/5 border border-white/10 py-5 rounded-3xl font-black text-xs uppercase tracking-[2px]">Withdraw Cash</button>
+                <button onclick="openPay()" class="w-full bg-[#a3ff12] text-black py-5 rounded-3xl font-black text-xs uppercase shadow-lg shadow-[#a3ff12]/20">Deposit ₹20</button>
             </div>
+
         </div>
 
-        <div class="fixed bottom-0 w-full max-w-md bg-black/90 backdrop-blur-xl border-t border-white/5 flex justify-around py-5">
-            <button onclick="showView('home')" id="btn-home" class="flex flex-col items-center gap-1 active-nav transition-all">
-                <i class="fa-solid fa-house-chimney text-lg"></i><span class="text-[8px] font-black uppercase">Home</span>
+        <div class="fixed bottom-0 w-full max-w-md bg-black/95 border-t border-white/5 flex justify-around py-5">
+            <button onclick="showSection('home')" id="nav-home" class="flex flex-col items-center gap-1 active-nav">
+                <i class="fa-solid fa-grid-2 text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Home</span>
             </button>
-            <button onclick="showView('earn')" id="btn-earn" class="flex flex-col items-center gap-1 text-white/30">
-                <i class="fa-solid fa-coins text-lg"></i><span class="text-[8px] font-black uppercase">Earn</span>
+            <button onclick="showSection('earn')" id="nav-earn" class="flex flex-col items-center gap-1 text-white/30">
+                <i class="fa-solid fa-bolt text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Earn</span>
             </button>
-            <button onclick="showView('wallet')" id="btn-wallet" class="flex flex-col items-center gap-1 text-white/30">
-                <i class="fa-solid fa-wallet text-lg"></i><span class="text-[8px] font-black uppercase">Wallet</span>
+            <button onclick="showSection('wallet')" id="nav-wallet" class="flex flex-col items-center gap-1 text-white/30">
+                <i class="fa-solid fa-wallet text-lg"></i><span class="text-[8px] font-black uppercase tracking-widest">Wallet</span>
             </button>
         </div>
 
         <div id="pay-modal" class="hidden fixed inset-0 bg-black/98 z-[100] flex items-center justify-center p-10">
             <div class="bg-[#0a0a0a] p-8 rounded-[40px] w-full text-center border border-white/10 space-y-6">
-                <p class="text-[10px] font-black opacity-40 tracking-[3px] uppercase">Scan & Unlock Premium</p>
+                <p class="text-[10px] font-black opacity-60 tracking-[3px] uppercase">Scan & Pay ₹20</p>
                 <div class="bg-white p-4 rounded-3xl inline-block">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=100">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=20">
                 </div>
                 <p class="text-xs font-black neon-text font-mono">yogeshbpatil72@okhdfcbank</p>
-                <button onclick="activate()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">I Have Paid ₹100</button>
-                <button onclick="closeModal()" class="text-white/20 text-[10px] font-bold uppercase">Cancel</button>
+                <button onclick="requestVerify()" class="w-full bg-white text-black py-4 rounded-2xl font-black text-xs uppercase">I Have Paid ₹20</button>
+                <button onclick="closePay()" class="text-white/20 text-[10px] font-bold uppercase">Cancel</button>
             </div>
         </div>
+
     </div>
 
     <script>
-        let isUnlocked = false;
+        let walletAmount = 0;
         let coins = 0.000000;
-        const sound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
 
-        function showView(viewId) {
+        function showSection(id) {
             ['home-sec', 'earn-sec', 'wallet-sec'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            ['btn-home', 'btn-earn', 'btn-wallet'].forEach(b => {
-                document.getElementById(b).classList.remove('active-nav');
-                document.getElementById(b).classList.add('text-white/30');
+            ['nav-home', 'nav-earn', 'nav-wallet'].forEach(n => {
+                document.getElementById(n).classList.remove('active-nav');
+                document.getElementById(n).classList.add('text-white/30');
             });
-            document.getElementById(viewId + '-sec').classList.remove('hidden');
-            document.getElementById('btn-' + viewId).classList.add('active-nav');
-            document.getElementById('btn-' + viewId).classList.remove('text-white/30');
+            document.getElementById(id + '-sec').classList.remove('hidden');
+            document.getElementById('nav-' + id).classList.add('active-nav');
         }
 
         function handleTap() {
-            if(!isUnlocked) { alert("Please Unlock Premium from Wallet first!"); showView('wallet'); return; }
-            sound.currentTime = 0; sound.play();
+            if(walletAmount < 20) {
+                alert("❌ Amount not found in Wallet! Please wait for Admin Verification.");
+                showSection('wallet');
+                return;
+            }
             coins += 0.000001;
-            document.getElementById('coin-val').innerText = coins.toFixed(6);
+            document.getElementById('coin-display').innerText = coins.toFixed(6);
         }
 
-        function openModal() { document.getElementById('pay-modal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('pay-modal').classList.add('hidden'); }
-        function activate() { 
-            isUnlocked = true; 
+        function openPay() { document.getElementById('pay-modal').classList.remove('hidden'); }
+        function closePay() { document.getElementById('pay-modal').classList.add('hidden'); }
+
+        function requestVerify() {
+            document.getElementById('pending-status').classList.remove('hidden');
+            closePay();
+            alert("✅ Payment details sent to Admin. Wallet will be updated after verification!");
+        }
+
+        /* --- ADMIN ONLY: How to Approve ---
+           Browser च्या Console मध्ये 'approvePayment()' टाईप केल्यावरच पैसे वाढतील.
+        */
+        window.approvePayment = function() {
+            walletAmount = 20;
+            document.getElementById('top-balance').innerText = "₹20.00";
+            document.getElementById('wallet-balance').innerText = "₹20.00";
+            document.getElementById('wallet-balance').className = "text-5xl font-black text-[#a3ff12] italic";
+            document.getElementById('pending-status').innerText = "Verified ✅";
             document.getElementById('lock-icon').className = "fa-solid fa-bolt-lightning text-6xl neon-text";
-            closeModal(); 
-            alert("✅ Payment Sent for Verification! Features Unlocked."); 
+            document.getElementById('tap-msg').innerText = "Limit: 1000/1000 Taps Remaining";
+            document.getElementById('tap-msg').className = "text-[10px] font-bold text-[#a3ff12] opacity-60 uppercase";
+            alert("Admin Action: Payment Approved! Wallet Updated.");
         }
     </script>
 </body>
-                </html>
-    
+</html>
