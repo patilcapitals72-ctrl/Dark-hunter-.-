@@ -139,4 +139,191 @@
     </script>
 </body>
     </html>
-    
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Hunter | Mega Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .game-card { background: #111; border: 1px solid #222; transition: 0.3s; cursor: pointer; }
+        .game-card:active { transform: scale(0.95); }
+        .tab-content { display: none; height: 82vh; overflow-y: auto; padding-bottom: 100px; }
+        .active-tab { display: block; }
+        .neon-text { color: #a3ff12; text-shadow: 0 0 10px #a3ff12; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-md mx-auto h-screen flex flex-col bg-[#050505] border-x border-white/5">
+        <div class="p-5 flex justify-between items-center bg-black border-b border-white/5">
+            <h1 class="font-black text-[#a3ff12] italic tracking-tighter text-xl">DARK HUNTER</h1>
+            <div class="bg-[#111] px-4 py-1 rounded-full border border-[#a3ff12]/30 text-[#a3ff12] text-xs font-bold">
+                Wallet: ₹<span id="bal">0</span>
+            </div>
+        </div>
+
+        <div class="flex-1">
+            <div id="home" class="tab-content active-tab p-5 space-y-8">
+                
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-fire text-orange-500"></i>
+                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Action & Runner</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div onclick="playGame('Subway Surfers')" class="game-card p-5 rounded-[2rem] text-center">
+                            <i class="fa-solid fa-person-running text-3xl text-yellow-500"></i>
+                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Subway Surfers</p>
+                        </div>
+                        <div onclick="playGame('Space Combat')" class="game-card p-5 rounded-[2rem] text-center">
+                            <i class="fa-solid fa-jet-fighter text-3xl text-red-500"></i>
+                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Space Action</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-puzzle-piece text-blue-500"></i>
+                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Board & Puzzles</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div onclick="playGame('Ludo Master')" class="game-card p-5 rounded-[2rem] text-center">
+                            <i class="fa-solid fa-dice text-3xl text-green-500"></i>
+                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Ludo Pro</p>
+                        </div>
+                        <div onclick="playGame('Block Puzzle')" class="game-card p-5 rounded-[2rem] text-center">
+                            <i class="fa-solid fa-shapes text-3xl text-purple-500"></i>
+                            <p class="text-[10px] mt-3 font-black uppercase tracking-tighter">Block Puzzle</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-coins text-[#a3ff12]"></i>
+                        <p class="text-[10px] text-white/50 font-bold uppercase tracking-widest">Earning Games</p>
+                    </div>
+                    <div onclick="showTab('color')" class="game-card p-6 rounded-[2rem] flex justify-between items-center border-[#a3ff12]/30">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#a3ff12]/10 rounded-2xl flex items-center justify-center">
+                                <i class="fa-solid fa-chart-line text-[#a3ff12] text-xl"></i>
+                            </div>
+                            <div>
+                                <b class="text-xs uppercase">Color Prediction</b>
+                                <p class="text-[9px] text-[#a3ff12] font-bold">Win 2x Profit</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-white/20"></i>
+                    </div>
+                </section>
+            </div>
+
+            <div id="color" class="tab-content p-6">
+                <div class="bg-[#111] p-8 rounded-[3rem] text-center border border-white/5 space-y-6">
+                    <p class="text-[10px] opacity-40 uppercase tracking-[4px]">Next Result in 15s</p>
+                    <div id="result-box" class="text-xl font-black italic">RESULT: ?</div>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="bet('green')" class="bg-green-600 px-10 py-4 rounded-2xl font-black text-xs uppercase shadow-lg shadow-green-900/20">Green</button>
+                        <button onclick="bet('red')" class="bg-red-600 px-10 py-4 rounded-2xl font-black text-xs uppercase shadow-lg shadow-red-900/20">Red</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wallet" class="tab-content p-6 space-y-6">
+                <div class="bg-gradient-to-br from-[#111] to-black p-10 rounded-[3rem] text-center border border-white/5 shadow-2xl">
+                    <p class="text-[10px] opacity-40 uppercase font-black tracking-widest mb-2">My Balance</p>
+                    <h2 class="text-6xl font-black text-[#a3ff12] italic" id="wal-bal">₹0</h2>
+                    <p id="p-status" class="hidden text-[10px] text-yellow-500 mt-4 font-bold italic animate-pulse">Verification Pending...</p>
+                </div>
+                <button onclick="payNow()" class="w-full bg-[#a3ff12] text-black py-5 rounded-[2rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-[#a3ff12]/10">Deposit ₹20 to Play</button>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 w-full max-w-md bg-black/90 backdrop-blur-xl border-t border-white/5 flex justify-around py-6 z-50">
+            <button onclick="showTab('home')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
+                <i class="fa-solid fa-grid-2 text-xl"></i>
+                <span class="text-[8px] font-black uppercase">Home</span>
+            </button>
+            <button onclick="showTab('color')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
+                <i class="fa-solid fa-coins text-xl"></i>
+                <span class="text-[8px] font-black uppercase">Earn</span>
+            </button>
+            <button onclick="showTab('wallet')" class="flex flex-col items-center gap-1 opacity-40 focus:opacity-100 focus:text-[#a3ff12]">
+                <i class="fa-solid fa-wallet text-xl"></i>
+                <span class="text-[8px] font-black uppercase">Wallet</span>
+            </button>
+        </div>
+
+        <div id="modal" class="hidden fixed inset-0 bg-black/98 z-[100] flex flex-col items-center justify-center p-10 text-center space-y-8">
+            <div class="space-y-2">
+                <p class="text-[10px] font-black opacity-40 tracking-[5px] uppercase">Payment Portal</p>
+                <h3 class="text-xl font-bold italic">Deposit ₹20</h3>
+            </div>
+            <div class="bg-white p-4 rounded-[2.5rem] shadow-2xl">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yogeshbpatil72@okhdfcbank&pn=Yogesh%20Patil&am=20">
+            </div>
+            <p class="text-xs font-mono font-bold text-[#a3ff12] tracking-widest">yogeshbpatil72@okhdfcbank</p>
+            <button onclick="requestVerify()" class="w-full bg-white text-black py-5 rounded-2xl font-black text-xs uppercase tracking-widest">I Have Paid ₹20</button>
+            <button onclick="closePay()" class="text-xs opacity-20 uppercase font-bold tracking-widest">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let wallet = 0;
+
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.getElementById(id).classList.add('active-tab');
+        }
+
+        function payNow() { document.getElementById('modal').classList.remove('hidden'); }
+        function closePay() { document.getElementById('modal').classList.add('hidden'); }
+
+        function requestVerify() {
+            document.getElementById('p-status').classList.remove('hidden');
+            closePay();
+            alert("Verification Sent! Wallet will update after Admin checks payment.");
+        }
+
+        // --- ADMIN COMMAND: Copy paste in Browser Console ---
+        window.approve = function() {
+            wallet = 20;
+            document.getElementById('bal').innerText = "20";
+            document.getElementById('wal-bal').innerText = "₹20";
+            document.getElementById('wal-bal').className = "text-6xl font-black text-[#a3ff12] italic";
+            document.getElementById('p-status').innerText = "Verified ✅";
+            alert("ADMIN: ₹20 Added. All Games Unlocked!");
+        }
+
+        function playGame(name) {
+            if(wallet < 20) {
+                alert("🔒 " + name + " is Locked! Please deposit ₹20 first.");
+                showTab('wallet');
+            } else {
+                alert("🚀 Launching " + name + "... Enjoy your game!");
+            }
+        }
+
+        function bet(color) {
+            if(wallet < 20) {
+                alert("🔒 Deposit ₹20 to play Color Prediction!");
+                showTab('wallet');
+                return;
+            }
+            document.getElementById('result-box').innerText = "DRAWING...";
+            setTimeout(() => {
+                let res = Math.random() > 0.5 ? 'RED' : 'GREEN';
+                document.getElementById('result-box').innerText = "RESULT: " + res;
+                if(res === color.toUpperCase()) alert("🎉 WIN! Double profit added.");
+                else alert("❌ LOSS! Try again.");
+            }, 2000);
+        }
+    </script>
+</body>
+                            </html>
+            
