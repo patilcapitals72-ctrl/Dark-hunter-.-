@@ -256,5 +256,42 @@
         }, 3000);
     </script>
 </body>
-                </html>
+                </html>// --- 1. Withdrawal Logic ---
+function openWithdraw() {
+    const coins = data.coins;
+    if(coins < 5000) {
+        tg.showAlert("Minimum 5,000 PTC coins pahije withdrawal sathi!");
+        return;
+    }
+    // Form dakhavne
+    tg.showConfirm(`Tumhi ${coins} coins exchange karu ichhita ka?`, (ok) => {
+        if(ok) {
+            tg.showAlert("Tumchi request admin kade pathavli aahe.");
+            // Data reset logic ithe yeil
+        }
+    });
+}
+
+// --- 2. Rank/Level Logic ---
+function updateRank() {
+    let rank = "Bronze";
+    let color = "#cd7f32";
+    
+    if(data.coins > 100000) { rank = "Diamond"; color = "#b9f2ff"; }
+    else if(data.coins > 50000) { rank = "Platinum"; color = "#e5e4e2"; }
+    else if(data.coins > 10000) { rank = "Gold"; color = "#f1c40f"; }
+    else if(data.coins > 5000) { rank = "Silver"; color = "#c0c0c0"; }
+    
+    const rankEl = document.getElementById('rank-name');
+    rankEl.innerText = rank;
+    rankEl.style.color = color;
+}
+
+// --- 3. Haptic Feedback (Vibration) ---
+function triggerHaptic() {
+    tg.HapticFeedback.impactOccurred('medium');
+}
+
+// handleTap function madhe triggerHaptic() call kara
+        
     
